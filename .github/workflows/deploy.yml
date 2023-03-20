@@ -1,0 +1,37 @@
+name: Node.js CI
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  build:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+          cache: 'yarn'
+      - run: yarn ci
+      - run: yarn run build
+      - run: node -v
+
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.GCP_VM_SSH }}
+          host: ${{ secrets.GCP_VM_IP }}
+          username: ${{ secrets.GCP_VM_USER }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd ./whatsapp-gpt
+            yarn run pm2:stop
+            echo "${{ secrets.ENV_FILE }}" > .env
+            echo "${{ secrets.CRED_FILE }}" > cred.json
+            git pull origin master
+            yarn install
+            yarn build
+            yarn run pm2:start
