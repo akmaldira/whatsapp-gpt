@@ -1,0 +1,13 @@
+node_modules
+session.json
+.env
+yarn-error.log
+dist
+aye.json
+test.js
+logs
+.rsa
+cred.json
+logs
+a.pub
+.github
