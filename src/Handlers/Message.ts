@@ -28,11 +28,11 @@ export class MessageHandler {
           .get(
             `${encodeURI(
               `http://api.brainshop.ai/get?bid=${params.get(
-                'bid',
+                'bid'
               )}&key=${params.get('key')}&uid=${
                 M.sender.jid
-              }&msg=${text}`,
-            )}`,
+              }&msg=${text}`
+            )}`
           )
           .then((res) => {
             if (res.status !== 200)
@@ -51,35 +51,35 @@ export class MessageHandler {
           M,
           this.client.config.openAIAPIKey,
           this.client.config.organization,
-          this.client.config.chatGPTOption,
+          this.client.config.chatGPTOption
         )
         handler.execute()
       }
 
       return void this.client.log(
         `${chalk.cyanBright('Message')} from ${chalk.yellowBright(
-          M.sender.username,
-        )} in ${chalk.blueBright(title)}`,
+          M.sender.username
+        )} in ${chalk.blueBright(title)}`
       )
     }
     this.client.log(
       `${chalk.cyanBright(
-        `Command ${args[0]}[${args.length - 1}]`,
+        `Command ${args[0]}[${args.length - 1}]`
       )} from ${chalk.yellowBright(
-        M.sender.username,
-      )} in ${chalk.blueBright(`${title}`)}`,
+        M.sender.username
+      )} in ${chalk.blueBright(`${title}`)}`
     )
     const { banned, tag } = await this.client.DB.getUser(M.sender.jid)
     if (banned)
       return void M.reply(
-        'Kamu telah diblokir untuk menggunakan perintah ini',
+        'Kamu telah diblokir untuk menggunakan perintah ini'
       )
     if (!tag)
       await this.client.DB.updateUser(
         M.sender.jid,
         'tag',
         'set',
-        this.client.utils.generateRandomUniqueTag(),
+        this.client.utils.generateRandomUniqueTag()
       )
     const cmd = args[0].toLowerCase().slice(prefix.length)
     const command = this.commands.get(cmd) || this.aliases.get(cmd)
@@ -87,32 +87,32 @@ export class MessageHandler {
     const disabledCommands =
       await this.client.DB.getDisabledCommands()
     const index = disabledCommands.findIndex(
-      (CMD) => CMD.command === command.name,
+      (CMD) => CMD.command === command.name
     )
     if (index >= 0)
       return void M.reply(
         `*${this.client.utils.capitalize(
-          cmd,
+          cmd
         )}* Telah didisable oleh *${
           disabledCommands[index].disabledBy
         }* pada *${
           disabledCommands[index].time
-        } (GMT)*. ❓ *Reason:* ${disabledCommands[index].reason}`,
+        } (GMT)*. ❓ *Reason:* ${disabledCommands[index].reason}`
       )
     if (
       command.config.category === 'dev' &&
       !this.client.config.mods.includes(M.sender.jid)
     )
       return void M.reply(
-        'Perintah ini hanya bisa digunakan oleh MODS',
+        'Perintah ini hanya bisa digunakan oleh MODS'
       )
     if (M.chat === 'dm' && !command.config.dm)
       return void M.reply(
-        'Perintah ini hanya bisa digunakan didalam grup',
+        'Perintah ini hanya bisa digunakan didalam grup'
       )
     if (command.config.category === 'moderation' && !M.sender.isAdmin)
       return void M.reply(
-        'Perintah ini hanya bisa digunakan oleh admin grup',
+        'Perintah ini hanya bisa digunakan oleh admin grup'
       )
     const { nsfw } = await this.client.DB.getGroup(M.from)
     if (command.config.category === 'nsfw' && !nsfw)
@@ -122,17 +122,17 @@ export class MessageHandler {
     if (this.cooldowns.has(`${M.sender.jid}${command.name}`)) {
       const cd = this.cooldowns.get(`${M.sender.jid}${command.name}`)
       const remainingTime = this.client.utils.convertMs(
-        (cd as number) - Date.now(),
+        (cd as number) - Date.now()
       )
       return void M.reply(
         `Tolong tunggu *${remainingTime}* ${
           remainingTime > 1 ? 'seconds' : 'second'
-        } untuk menggunakan perintah lagi`,
+        } untuk menggunakan perintah lagi`
       )
     } else this.cooldowns.set(`${M.sender.jid}${command.name}`, time)
     setTimeout(
       () => this.cooldowns.delete(`${M.sender.jid}${command.name}`),
-      cooldownAmount,
+      cooldownAmount
     )
     try {
       await command.execute(M, this.formatArgs(args))
@@ -145,13 +145,13 @@ export class MessageHandler {
     if (M.chat !== 'group') return void null
     const { mods } = await this.client.DB.getGroup(M.from)
     const isAdmin = M.groupMetadata?.admins?.includes(
-      this.client.correctJid(this.client.user?.id || ''),
+      this.client.correctJid(this.client.user?.id || '')
     )
     if (!mods || M.sender.isAdmin || !isAdmin) return void null
     const urls = this.client.utils.extractUrls(M.content)
     if (urls.length > 0) {
       const groupinvites = urls.filter((url) =>
-        url.includes('chat.whatsapp.com'),
+        url.includes('chat.whatsapp.com')
       )
       if (groupinvites.length > 0) {
         groupinvites.forEach(async (invite) => {
@@ -160,17 +160,17 @@ export class MessageHandler {
           if (inviteSplit[inviteSplit.length - 1] !== code) {
             this.client.log(
               `${chalk.blueBright('MOD')} ${chalk.green(
-                'Group Invite',
+                'Group Invite'
               )} by ${chalk.yellow(
-                M.sender.username,
+                M.sender.username
               )} in ${chalk.cyanBright(
-                M.groupMetadata?.subject || 'Group',
-              )}`,
+                M.groupMetadata?.subject || 'Group'
+              )}`
             )
             return void (await this.client.groupParticipantsUpdate(
               M.from,
               [M.sender.jid],
-              'remove',
+              'remove'
             ))
           }
         })
@@ -183,14 +183,14 @@ export class MessageHandler {
     return {
       args,
       context: args.join(' ').trim(),
-      flags: args.filter((arg) => arg.startsWith('--')),
+      flags: args.filter((arg) => arg.startsWith('--'))
     }
   }
 
   public loadCommands = (): void => {
     this.client.log('Loading Commands...')
     const files = readdirSync(join(...this.path)).filter(
-      (file) => !file.startsWith('_'),
+      (file) => !file.startsWith('_')
     )
     for (const file of files) {
       this.path.push(file)
@@ -198,19 +198,19 @@ export class MessageHandler {
       for (const Command of Commands) {
         this.path.push(Command)
         const command: BaseCommand = new (require(join(
-          ...this.path,
+          ...this.path
         )).default)()
         command.client = this.client
         command.handler = this
         this.commands.set(command.name, command)
         if (command.config.aliases)
           command.config.aliases.forEach((alias) =>
-            this.aliases.set(alias, command),
+            this.aliases.set(alias, command)
           )
         this.client.log(
           `Loaded: ${chalk.yellowBright(
-            command.name,
-          )} from ${chalk.cyanBright(command.config.category)}`,
+            command.name
+          )} from ${chalk.cyanBright(command.config.category)}`
         )
         this.path.splice(this.path.indexOf(Command), 1)
       }
@@ -221,7 +221,7 @@ export class MessageHandler {
         this.commands.size > 1 ? 'commands' : 'command'
       } with ${chalk.yellowBright(this.aliases.size)} ${
         this.aliases.size > 1 ? 'aliases' : 'alias'
-      }`,
+      }`
     )
   }
 

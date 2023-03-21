@@ -4,6 +4,7 @@ import {
   TextToSpeechClient,
   v1 as v1tts
 } from '@google-cloud/text-to-speech'
+import { ImageAnnotatorClient, v1 as v1v } from '@google-cloud/vision'
 import ffmpeg from 'fluent-ffmpeg'
 import { Transform } from 'form-data'
 import { readFile, unlink, writeFile } from 'fs/promises'
@@ -13,12 +14,14 @@ import { v4 } from 'uuid'
 
 ffmpeg.setFfmpegPath(ffmpegPath.path)
 
-export class SpeechText {
+export class GoogleAPI {
   sttClient: v1sst.SpeechClient
   ttsClient: v1tts.TextToSpeechClient
+  viClient: v1v.ImageAnnotatorClient
   constructor() {
     this.sttClient = new SpeechClient()
     this.ttsClient = new TextToSpeechClient()
+    this.viClient = new ImageAnnotatorClient()
   }
 
   public async voiceToText(
@@ -90,6 +93,18 @@ export class SpeechText {
     } catch (error) {
       console.log(error.message)
       return 'error'
+    }
+  }
+
+  public async imageToText(imgBuffer: Buffer): Promise<string> {
+    try {
+      const [result] = await this.viClient.textDetection(imgBuffer)
+      return result.fullTextAnnotation.text
+    } catch (error) {
+      return (
+        'Error saat membaca text dari gambar\n\n*Reason *' +
+        error.message
+      )
     }
   }
 

@@ -1,7 +1,7 @@
 import { downloadMediaMessage, proto } from '@adiwajshing/baileys'
 import { unlink } from 'fs/promises'
+import { GoogleAPI } from '../lib/GoogleAPI'
 import { IChatGPTOption, OpenAI } from '../lib/OpenAI'
-import { SpeechText } from '../lib/SpeechText'
 import { Message } from '../Structures'
 
 export default class AudioMessage {
@@ -46,8 +46,8 @@ export default class AudioMessage {
       {}
     )
 
-    const speech = new SpeechText()
-    const question = await speech.voiceToText(
+    const googleApi = new GoogleAPI()
+    const question = await googleApi.voiceToText(
       buffer,
       this.audio.mimetype.split('/')[1].split(';')[0] || '.ogg'
     )
@@ -55,6 +55,10 @@ export default class AudioMessage {
     if (question === 'error') {
       return void this.M.reply(
         'Kesalahan saan mentranscribe audio ke text'
+      )
+    } else if (question.length < 1) {
+      return void this.M.reply(
+        'Tidak ada text yang ditemukan dalam voice'
       )
     }
 
@@ -65,7 +69,7 @@ export default class AudioMessage {
     )
     const answer = await openai.ask(this.M.from, question)
 
-    const answerVoicePath = await speech.textToVoice(answer)
+    const answerVoicePath = await googleApi.textToVoice(answer)
 
     if (answerVoicePath === 'error') {
       return void this.M.reply(

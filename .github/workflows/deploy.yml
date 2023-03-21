@@ -32,7 +32,6 @@ jobs:
             cd ./whatsapp-gpt
             yarn run pm2:stop
             echo "${{ secrets.ENV_FILE }}" > .env
-            echo "${{ secrets.CRED_FILE }}" > cred.json
             git pull origin master
             yarn install
             yarn build
