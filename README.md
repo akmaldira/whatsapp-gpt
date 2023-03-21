@@ -16,14 +16,15 @@
 
 ### Requirement
 
-> node engines >=18.x
-> Open AI Key
-> Open AI Organization
-> Google Credential for useage Speech To Text API and Text To Speech API
+- node engines >=18.x
+- Open AI Key
+- Open AI Organization
+- Google Credential for useage Speech To Text API and Text To Speech API
 
 ### Development
 
 > Rename .env.example to .env & fill .env file
+
 > Rename cred.example.json to cred.json & fill cred service account from google cloud
 
 ```bash
@@ -37,6 +38,7 @@ yarn dev
 ### Deployment
 
 > Rename .env.example to .env & fill .env file
+
 > Rename cred.example.json to cred.json & fill cred service account from google cloud
 
 ```bash
