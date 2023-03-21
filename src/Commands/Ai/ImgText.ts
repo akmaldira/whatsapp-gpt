@@ -3,11 +3,11 @@ import { GoogleAPI } from '../../lib/GoogleAPI'
 import { OpenAI } from '../../lib/OpenAI'
 import { BaseCommand, Command, Message } from '../../Structures'
 
-@Command('imggpt', {
+@Command('imgtext', {
   description: 'Menggunakan Chat GPT dari gambar yang berisi text',
   category: 'ai',
-  usage: 'imggpt [reply gambar atau kirim gambar]',
-  aliases: ['gptimg'],
+  usage: 'imgtext [reply gambar atau kirim gambar]',
+  aliases: ['textimg'],
   cooldown: 20,
   dm: true
 })
@@ -19,6 +19,7 @@ export default class extends BaseCommand {
     )
       return void M.reply('Media tidak ditemukan')
 
+    M.reply('*Processing!!!*')
     let buffer!: Buffer
     if (M.hasSupportedMediaMessage) {
       buffer = await M.downloadMediaMessage(
