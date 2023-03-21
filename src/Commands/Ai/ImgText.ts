@@ -7,6 +7,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
   description: 'Menggunakan Chat GPT dari gambar yang berisi text',
   category: 'ai',
   usage: 'imggpt [reply gambar atau kirim gambar]',
+  aliases: ['gptimg'],
   cooldown: 20,
   dm: true
 })
