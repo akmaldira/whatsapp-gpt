@@ -11,17 +11,24 @@ import { readFile, unlink, writeFile } from 'fs/promises'
 import os from 'os'
 import path from 'path'
 import { v4 } from 'uuid'
+import { IGoogleOption } from '../Types'
 
 ffmpeg.setFfmpegPath(ffmpegPath.path)
 
 export class GoogleAPI {
-  sttClient: v1sst.SpeechClient
-  ttsClient: v1tts.TextToSpeechClient
-  viClient: v1v.ImageAnnotatorClient
-  constructor() {
+  private sttClient: v1sst.SpeechClient
+
+  private ttsClient: v1tts.TextToSpeechClient
+
+  private viClient: v1v.ImageAnnotatorClient
+
+  private googleApiOption: IGoogleOption
+
+  constructor(googleApiOption: IGoogleOption) {
     this.sttClient = new SpeechClient()
     this.ttsClient = new TextToSpeechClient()
     this.viClient = new ImageAnnotatorClient()
+    this.googleApiOption = googleApiOption
   }
 
   public async voiceToText(
@@ -53,7 +60,7 @@ export class GoogleAPI {
         config: {
           encoding: 'LINEAR16',
           sampleRateHertz: 48000,
-          languageCode: 'id-ID',
+          languageCode: this.googleApiOption.voiceLanguage,
           speechContexts: [{ phrases: ['$TIME'] }]
         },
         audio: {
@@ -77,7 +84,10 @@ export class GoogleAPI {
     try {
       const [response] = await this.ttsClient.synthesizeSpeech({
         input: { text },
-        voice: { languageCode: 'id-ID', ssmlGender: 'FEMALE' },
+        voice: {
+          languageCode: this.googleApiOption.voiceLanguage,
+          ssmlGender: this.googleApiOption.voiceGender
+        },
         audioConfig: {
           audioEncoding: 'OGG_OPUS',
           effectsProfileId: ['telephony-class-application']

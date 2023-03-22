@@ -5,6 +5,7 @@ import Baileys, {
   ParticipantAction,
   proto
 } from '@adiwajshing/baileys'
+import { google } from '@google-cloud/text-to-speech/build/protos/protos'
 import { Boom } from '@hapi/boom'
 import chalk from 'chalk'
 import { config as Config } from 'dotenv'
@@ -48,6 +49,14 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         frequency_penalty: 0,
         presence_penalty: 0,
         model: 'gpt-3.5-turbo'
+      },
+      googleApiEnable: process.env.USE_GOOGLE_API === 'true', // dont change this!!!
+      googleApiOption: {
+        voiceLanguage: process.env.GOOGLE_VOICE_LANGUAGE || 'en-EN',
+        voiceGender:
+          google.cloud.texttospeech.v1.SsmlVoiceGender[
+            process.env.GOOGLE_VOICE_SSML_GENDER
+          ] || google.cloud.texttospeech.v1.SsmlVoiceGender['FEMALE']
       }
     }
     new Server(this)

@@ -46,7 +46,11 @@ export class MessageHandler {
     }
     await this.moderate(M)
     if (!args[0] || !args[0].startsWith(prefix)) {
-      if (!M.message.key.fromMe && M.message.message?.audioMessage) {
+      if (
+        !M.message.key.fromMe &&
+        M.message.message?.audioMessage &&
+        this.client.config.googleApiEnable
+      ) {
         let voiceGropuEnable = false
         if (M.chat === 'group') {
           const { voicegpt } = await this.client.DB.getGroup(M.from)
@@ -57,7 +61,8 @@ export class MessageHandler {
             M,
             this.client.config.openAIAPIKey,
             this.client.config.organization,
-            this.client.config.chatGPTOption
+            this.client.config.chatGPTOption,
+            this.client.config.googleApiOption
           )
           handler.execute()
         }

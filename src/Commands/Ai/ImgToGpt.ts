@@ -13,6 +13,8 @@ import { BaseCommand, Command, Message } from '../../Structures'
 })
 export default class extends BaseCommand {
   public override execute = async (M: Message): Promise<void> => {
+    if (!this.client.config.googleApiEnable)
+      return void M.reply('Fitur ini tidak diaktifkan')
     if (
       !M.hasSupportedMediaMessage &&
       !M.quoted?.hasSupportedMediaMessage
@@ -38,7 +40,9 @@ export default class extends BaseCommand {
       return void M.reply('Media tidak support!, hanya boleh gambar')
     }
 
-    const googleApi = new GoogleAPI()
+    const googleApi = new GoogleAPI(
+      this.client.config.googleApiOption
+    )
     const question = await googleApi.imageToText(buffer)
     if (question.length < 1)
       return void M.reply('Text tidak ditemukan')

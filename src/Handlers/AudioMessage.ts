@@ -3,6 +3,7 @@ import { unlink } from 'fs/promises'
 import { GoogleAPI } from '../lib/GoogleAPI'
 import { IChatGPTOption, OpenAI } from '../lib/OpenAI'
 import { Message } from '../Structures'
+import { IGoogleOption } from '../Types'
 
 export default class AudioMessage {
   private M: Message
@@ -15,17 +16,21 @@ export default class AudioMessage {
 
   private chatGPTOption: IChatGPTOption
 
+  private googleApiOption: IGoogleOption
+
   constructor(
     M: Message,
     openAIAPIKey: string,
     organization: string,
-    chatGPTOption: IChatGPTOption
+    chatGPTOption: IChatGPTOption,
+    googleApiOption: IGoogleOption
   ) {
     this.M = M
     this.audio = M.message.message.audioMessage || null
     this.openAIAPIKey = openAIAPIKey
     this.organization = organization
-    this.chatGPTOption = chatGPTOption
+    ;(this.chatGPTOption = chatGPTOption),
+      (this.googleApiOption = googleApiOption)
   }
 
   public execute = async () => {
@@ -45,7 +50,7 @@ export default class AudioMessage {
       {}
     )
 
-    const googleApi = new GoogleAPI()
+    const googleApi = new GoogleAPI(this.googleApiOption)
     const question = await googleApi.voiceToText(
       buffer,
       this.audio.mimetype.split('/')[1].split(';')[0] || '.ogg'

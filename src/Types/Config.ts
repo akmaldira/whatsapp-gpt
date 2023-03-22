@@ -1,4 +1,10 @@
+import { google } from '@google-cloud/text-to-speech/build/protos/protos.js'
 import { IChatGPTOption } from '../lib/OpenAI.js'
+
+export interface IGoogleOption {
+  voiceLanguage: string
+  voiceGender: google.cloud.texttospeech.v1.SsmlVoiceGender
+}
 
 export interface IConfig {
   /**name of your bot */
@@ -21,4 +27,8 @@ export interface IConfig {
   organization: string
   /**chatgpt option */
   chatGPTOption: IChatGPTOption
+  /**use google api */
+  googleApiEnable: boolean
+  /**google api option */
+  googleApiOption: IGoogleOption
 }
