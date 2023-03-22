@@ -1,5 +1,6 @@
 import { Contact } from '@adiwajshing/baileys'
 import {
+  contact,
   contactSchema,
   disabledCommandsSchema,
   featureSchema,
@@ -89,6 +90,26 @@ export class Database {
     if (!result)
       result = await new this.contact({ ID: 'contacts' }).save()
     return result.data
+  }
+
+  public getContactsForBroadcast = async (): Promise<contact[]> => {
+    let users = await this.contact.findOne({ ID: 'contacts' })
+
+    return users.data.filter((user) => user.broadcast === true)
+  }
+
+  public updateContactBroadcast = async (
+    id: string,
+    broadcast: boolean
+  ): Promise<void> => {
+    const updated = await this.contact.updateMany(
+      { 'data.id': id },
+      {
+        $set: {
+          'data.$.broadcast': broadcast
+        }
+      }
+    )
   }
 
   public getDisabledCommands = async (): Promise<
