@@ -45,7 +45,8 @@ export default class extends BaseCommand {
         )
         text += `❐ \`\`\`${categoryCommands.join(', ')}\`\`\``
       }
-      text += `\n\n *Personal Message*\n ❐ \`\`\`Kirim Voice Note untuk menggunakan Voice Gpt, jika ingin menggunakan di grup, admin harus mengaktifkannya dengan cara !set lalu Enable Voicegpt\`\`\``
+      text += `\n\n*Voice Gpt*\n❐ \`\`\`Kirim Voice Note untuk menggunakan Voice Gpt (Personal Message Only)\`\`\`
+                \n❐ \`\`\`Kirim Voice Note didalam grup untuk menggunakan Voice Gpt (Admin grup harus mengaktifkan Voicegpt didalam grup dengan cara !set lalu Enable Voicegpt)\`\`\``
       text += '\n\n*Jika bot tidak membalas, harap coba lagi*'
       text += `\n\n⚠️ *Note:* Gunakan ${this.client.config.prefix}help <command_name> untuk melihat cara penggunaan. Contoh: *${this.client.config.prefix}help gpt*`
       return void (await M.reply(
