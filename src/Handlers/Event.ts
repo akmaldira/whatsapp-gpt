@@ -53,9 +53,9 @@ export class EventHandler {
             .map((jid) => `@${jid.split('@')[0]}`)
             .join(', ')}* 👋🏻`
         : event.action === 'demote'
-        ? `Ara Ara, looks like *@${
+        ? `sepertinya *@${
             event.participants[0].split('@')[0]
-          }* got Demoted`
+          }* telah didisable`
         : `Selamat *@${
             event.participants[0].split('@')[0]
           }*, kamu sekarang adalah admin`

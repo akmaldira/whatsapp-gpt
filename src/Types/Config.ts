@@ -17,8 +17,6 @@ export interface IConfig {
   chatBotUrl: string
   /**number of the users who's the bot admins of the bot */
   mods: string[]
-  /**port number where the server will be started */
-  PORT: number
   /**development mode */
   isDevelopment: boolean
   /**openai key */

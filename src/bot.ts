@@ -4,34 +4,46 @@ import {
   EventHandler,
   MessageHandler
 } from './Handlers'
-import { Client } from './Structures'
+import { Client, Server } from './Structures'
+require('dotenv').config()
 ;(async (): Promise<void> => {
-  const client = new Client()
+  const sessions = (process.env.SESSION || '').split(', ')
 
-  await client.start()
+  if (sessions && sessions.length > 0) {
+    const clientRun = []
+    for await (const session of sessions) {
+      const client = new Client(session)
+      clientRun.push(client)
 
-  new AssetHandler(client).loadAssets()
+      await client.start()
 
-  const { handleMessage, loadCommands } = new MessageHandler(client)
+      new AssetHandler(client).loadAssets()
 
-  const { handleEvents, sendMessageOnJoiningGroup } =
-    new EventHandler(client)
+      const { handleMessage, loadCommands } = new MessageHandler(
+        client
+      )
 
-  const { handleCall } = new CallHandler(client)
+      const { handleEvents, sendMessageOnJoiningGroup } =
+        new EventHandler(client)
 
-  loadCommands()
+      const { handleCall } = new CallHandler(client)
 
-  client.on('new_message', async (M) => await handleMessage(M))
+      loadCommands()
 
-  client.on(
-    'participants_update',
-    async (event) => await handleEvents(event)
-  )
+      client.on('new_message', async (M) => await handleMessage(M))
 
-  client.on(
-    'new_group_joined',
-    async (group) => await sendMessageOnJoiningGroup(group)
-  )
+      client.on(
+        'participants_update',
+        async (event) => await handleEvents(event)
+      )
 
-  client.on('new_call', async (call) => await handleCall(call))
+      client.on(
+        'new_group_joined',
+        async (group) => await sendMessageOnJoiningGroup(group)
+      )
+
+      client.on('new_call', async (call) => await handleCall(call))
+    }
+    new Server(clientRun)
+  }
 })()

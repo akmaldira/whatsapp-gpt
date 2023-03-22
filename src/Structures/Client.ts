@@ -18,26 +18,24 @@ import {
   AuthenticationFromDatabase,
   Contact,
   Database,
-  Message,
-  Server
+  Message
 } from '.'
 import { Utils } from '../lib'
 import { client, ICall, IConfig, IEvent } from '../Types'
 
 export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) {
   private client!: client
-  constructor() {
+  constructor(session: string) {
     super()
     Config()
     this.config = {
       name: process.env.BOT_NAME || 'Bot',
-      session: process.env.SESSION || 'SESSION',
+      session: session,
       prefix: process.env.PREFIX || ':',
       chatBotUrl: process.env.CHAT_BOT_URL || '',
       mods: (process.env.MODS || '')
         .split(', ')
         .map((user) => `${user}@s.whatsapp.net`),
-      PORT: Number(process.env.PORT || 8080),
       isDevelopment:
         process.env.NODE_ENV === 'development' ? true : false,
       openAIAPIKey: process.env.OPENAI_KEY || '',
@@ -59,7 +57,6 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
           ] || google.cloud.texttospeech.v1.SsmlVoiceGender['FEMALE']
       }
     }
-    new Server(this)
   }
 
   public start = async (): Promise<client> => {
@@ -76,7 +73,6 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
     const { version } = await fetchLatestBaileysVersion()
     this.client = Baileys({
       version,
-      printQRInTerminal: true,
       auth: state,
       logger: P({ level: 'fatal' }),
       browser: Browsers.macOS('Safari'),
@@ -141,9 +137,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
     })
     this.ev.on('connection.update', (update) => {
       if (update.qr) {
-        this.log(
-          `QR code generated. Scan it to continue | You can also authenicate in http://localhost:${this.config.PORT}`
-        )
+        this.log(`QR code generated. Scan it to continue`)
         this.QR = qr.imageSync(update.qr)
       }
       const { connection, lastDisconnect } = update
@@ -194,7 +188,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
   public log = (text: string, error: boolean = false): void =>
     console.log(
       chalk[error ? 'red' : 'blue'](
-        `[${this.config.name.toUpperCase()}]`
+        `[${this.config.session.toUpperCase()}]`
       ),
       chalk[error ? 'redBright' : 'greenBright'](text)
     )
