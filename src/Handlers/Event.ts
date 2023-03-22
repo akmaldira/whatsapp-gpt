@@ -22,6 +22,7 @@ export class EventHandler {
         group.subject = '__'
         group.description = ''
       })
+    await this.client.chatModify({ mute: +1 }, event.jid)
     this.client.log(
       `${chalk.blueBright('EVENT')} ${chalk.green(
         `${this.client.utils.capitalize(event.action)}[${

@@ -19,7 +19,7 @@
 - node engines >=18.x
 - Open AI Key
 - Open AI Organization
-- Google Credential for useage Speech To Text API and Text To Speech API
+- Google Credential for usage Google API (Speach To Text, Text To Speach, and more)
 
 ### Development
 
