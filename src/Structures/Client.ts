@@ -50,7 +50,6 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         model: 'gpt-3.5-turbo'
       }
     }
-    console.log(process.env.NODE_ENV)
     new Server(this)
   }
 

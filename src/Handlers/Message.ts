@@ -113,7 +113,10 @@ export class MessageHandler {
       return void M.reply(
         'Perintah ini hanya bisa digunakan oleh MODS'
       )
-    if (!this.client.config.mods.includes(M.sender.jid)) {
+    if (
+      this.client.config.isDevelopment &&
+      !this.client.config.mods.includes(M.sender.jid)
+    ) {
       return void M.reply(
         'Bot sedang dalam *maintenance*, harap bersabar'
       )
