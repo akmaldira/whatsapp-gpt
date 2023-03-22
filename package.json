@@ -11,7 +11,7 @@
     "dev": "cross-env NODE_ENV=development ts-node src/bot.ts",
     "start": "node --max-old-space-size=4096 dist/bot.js",
     "build": "yarn rimraf dist/ && yarn tsc -p .",
-    "pm2:start": "cross-env NODE_ENV=production pm2 start ./pm2.config.js",
+    "pm2:start": "pm2 start ./pm2.config.js --env production",
     "pm2:stop": "pm2 delete bot_akmal",
     "ci": "yarn install --frozen-lockfile"
   },

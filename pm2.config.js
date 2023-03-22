@@ -10,6 +10,9 @@ module.exports = {
   out_file: 'logs/out.log',
   time: true,
   env: {
+    NODE_ENV: 'development'
+  },
+  env_production: {
     NODE_ENV: 'production'
   }
 }
