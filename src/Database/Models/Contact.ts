@@ -27,9 +27,6 @@ export class contact {
 
   @prop({ type: String })
   public imgUrl?: string
-
-  @prop({ type: Boolean, required: true, default: true })
-  public broadcast!: boolean
 }
 
 export type TContactModel = Contact & Document

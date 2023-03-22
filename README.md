@@ -56,7 +56,11 @@ yarn run pm2:start
 ### Contribution
 
 - Feel free to open issues regarding any problems or if you have any feature requests
-- Join my whatsapp group for more information [WhatsApp GPT](https://chat.whatsapp.com/DamD6Evs5vS5z32vxUkE3p)
+
+### More Question
+
+- Join Official WhatsApp Group [WhatsApp GPT](https://chat.whatsapp.com/DamD6Evs5vS5z32vxUkE3p)
+
 ## Thanks To
 
 - [`Shinei | Whatshell`](https://github.com/LuckyYam/)
