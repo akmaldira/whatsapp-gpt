@@ -29,7 +29,6 @@ export default class AudioMessage {
   }
 
   public execute = async () => {
-    if (this.M.chat === 'group') return
     if (!this.audio) return
     if (this.audio.seconds > 10) {
       this.M.reply(

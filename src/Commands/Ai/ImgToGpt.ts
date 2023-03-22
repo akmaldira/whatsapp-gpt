@@ -3,11 +3,11 @@ import { GoogleAPI } from '../../lib/GoogleAPI'
 import { OpenAI } from '../../lib/OpenAI'
 import { BaseCommand, Command, Message } from '../../Structures'
 
-@Command('imgtext', {
+@Command('imgtogpt', {
   description: 'Menggunakan Chat GPT dari gambar yang berisi text',
   category: 'ai',
   usage: 'imgtext [reply gambar atau kirim gambar]',
-  aliases: ['textimg'],
+  aliases: ['textimg', 'imgtext'],
   cooldown: 20,
   dm: true
 })
@@ -21,12 +21,21 @@ export default class extends BaseCommand {
 
     M.reply('*Processing!!!*')
     let buffer!: Buffer
-    if (M.hasSupportedMediaMessage) {
+    if (
+      M.hasSupportedMediaMessage &&
+      M.message.message.imageMessage
+    ) {
       buffer = await M.downloadMediaMessage(
         M.message.message as proto.IMessage
       )
-    } else if (M.quoted && M.quoted.hasSupportedMediaMessage) {
+    } else if (
+      M.quoted &&
+      M.quoted.message.imageMessage &&
+      M.quoted.hasSupportedMediaMessage
+    ) {
       buffer = await M.downloadMediaMessage(M.quoted.message)
+    } else {
+      return void M.reply('Media tidak support!, hanya boleh gambar')
     }
 
     const googleApi = new GoogleAPI()

@@ -9,7 +9,7 @@ import { IArgs } from '../../Types'
   cooldown: 10,
   usage:
     'sticker [caption/reply pesan yang mengandung media] [options] | <pack> | <author>',
-  aliases: ['s'],
+  aliases: ['s', 'stiker'],
   dm: true
 })
 export default class extends BaseCommand {

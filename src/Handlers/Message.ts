@@ -47,13 +47,20 @@ export class MessageHandler {
     await this.moderate(M)
     if (!args[0] || !args[0].startsWith(prefix)) {
       if (!M.message.key.fromMe && M.message.message?.audioMessage) {
-        const handler = new AudioMessage(
-          M,
-          this.client.config.openAIAPIKey,
-          this.client.config.organization,
-          this.client.config.chatGPTOption
-        )
-        handler.execute()
+        let voiceGropuEnable = false
+        if (M.chat === 'group') {
+          const { voicegpt } = await this.client.DB.getGroup(M.from)
+          voiceGropuEnable = voicegpt
+        }
+        if (M.chat === 'dm' || voiceGropuEnable) {
+          const handler = new AudioMessage(
+            M,
+            this.client.config.openAIAPIKey,
+            this.client.config.organization,
+            this.client.config.chatGPTOption
+          )
+          handler.execute()
+        }
       }
 
       return void this.client.log(
@@ -106,6 +113,11 @@ export class MessageHandler {
       return void M.reply(
         'Perintah ini hanya bisa digunakan oleh MODS'
       )
+    if (!this.client.config.mods.includes(M.sender.jid)) {
+      return void M.reply(
+        'Bot sedang dalam *maintenance*, harap bersabar'
+      )
+    }
     if (M.chat === 'dm' && !command.config.dm)
       return void M.reply(
         'Perintah ini hanya bisa digunakan didalam grup'

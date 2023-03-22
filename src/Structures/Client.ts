@@ -37,6 +37,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         .split(', ')
         .map((user) => `${user}@s.whatsapp.net`),
       PORT: Number(process.env.PORT || 8080),
+      isDevelopment:
+        process.env.NODE_ENV === 'development' ? true : false,
       openAIAPIKey: process.env.OPENAI_KEY || '',
       organization: process.env.ORGANIZATION || '',
       chatGPTOption: {

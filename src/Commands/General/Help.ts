@@ -45,6 +45,8 @@ export default class extends BaseCommand {
         )
         text += `❐ \`\`\`${categoryCommands.join(', ')}\`\`\``
       }
+      text += `\n\n *Personal Message Only*\n ❐ \`\`\`Send Voice Note to use voice gpt\`\`\``
+      text += '*Jika bot tidak membalas, harap coba lagi*'
       text += `\n\n⚠️ *Note:* Gunakan ${this.client.config.prefix}help <command_name> untuk melihat cara penggunaan. Contoh: *${this.client.config.prefix}help gpt*`
       return void (await M.reply(
         buffer,
