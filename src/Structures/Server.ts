@@ -19,7 +19,7 @@ export class Server {
 
   private clients: Client[] = []
 
-  private maxTryConnect = 2
+  private maxTryConnect = 10
 
   constructor(database: Database) {
     this.database = database
