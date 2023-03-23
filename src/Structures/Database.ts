@@ -65,6 +65,9 @@ export class Database {
   ): Promise<TSessionModel | null> =>
     await this.session.findOne({ sessionId })
 
+  public getAllSession = async (): Promise<TSessionModel[]> =>
+    await this.session.find({})
+
   public saveNewSession = async (
     sessionId: string
   ): Promise<void> => {

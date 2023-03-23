@@ -10,7 +10,6 @@ import { Boom } from '@hapi/boom'
 import chalk from 'chalk'
 import { config as Config } from 'dotenv'
 import EventEmitter from 'events'
-import { connect, set } from 'mongoose'
 import P from 'pino'
 import qr from 'qr-image'
 import TypedEventEmitter from 'typed-emitter'
@@ -20,17 +19,19 @@ import {
   Database,
   Message
 } from '.'
+import { TSessionModel } from '../Database'
 import { Utils } from '../lib'
 import { client, ICall, IConfig, IEvent } from '../Types'
 
 export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>) {
   private client!: client
-  constructor(session: string) {
+
+  constructor(session: TSessionModel) {
     super()
     Config()
     this.config = {
       name: process.env.BOT_NAME || 'Bot',
-      session: session,
+      session: session.sessionId,
       prefix: process.env.PREFIX || ':',
       chatBotUrl: process.env.CHAT_BOT_URL || '',
       mods: (process.env.MODS || '')
@@ -48,6 +49,9 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         presence_penalty: 0,
         model: 'gpt-3.5-turbo'
       },
+      chatGPTSystem:
+        session.gptSystem ||
+        'Saya adalah asisten yang dapat membantu user untuk menjawab pertanyaan umum, saya bisa bercanda tawa bersama user, saya dibuat oleh Akmal Dira pada tanggal 20 Maret 2023',
       googleApiEnable: process.env.USE_GOOGLE_API === 'true', // dont change this!!!
       googleApiOption: {
         voiceLanguage: process.env.GOOGLE_VOICE_LANGUAGE || 'en-EN',
@@ -63,8 +67,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
     if (!process.env.MONGO_URI) {
       throw new Error('No MongoDB URI provided')
     }
-    set('strictQuery', false)
-    await connect(process.env.MONGO_URI)
+
     this.log('Connected to the Database')
     const { useDatabaseAuth } = new AuthenticationFromDatabase(
       this.config.session
@@ -151,11 +154,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
           setTimeout(() => this.start(), 3000)
         } else {
           this.log('Disconnected.', true)
-          this.log('Deleting session and restarting')
           clearState()
-          this.log('Session deleted')
-          this.log('Starting...')
-          setTimeout(() => this.start(), 3000)
+          this.condition = 'logged_out'
         }
       }
       if (connection === 'connecting') {
@@ -167,6 +167,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
           this.config.isDevelopment ? 'maintenance' : 'call = block'
         )
         this.condition = 'connected'
+        this.QR = null
         this.log('Connected to WhatsApp')
       }
     })

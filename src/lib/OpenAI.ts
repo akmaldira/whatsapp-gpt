@@ -25,7 +25,8 @@ export class OpenAI extends OpenAIApi {
   constructor(
     openAIAPIKey: string,
     organization: string,
-    option: IChatGPTOption
+    option: IChatGPTOption,
+    gptSystem: string
   ) {
     super(
       new Configuration({
@@ -34,6 +35,7 @@ export class OpenAI extends OpenAIApi {
       })
     )
     this.option = option
+    this.conversationS = new Conversation(gptSystem)
   }
 
   public async ask(
@@ -100,5 +102,5 @@ export class OpenAI extends OpenAIApi {
     }))
   }
 
-  private conversationS = new Conversation()
+  private conversationS: Conversation
 }

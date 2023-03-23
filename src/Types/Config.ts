@@ -25,6 +25,8 @@ export interface IConfig {
   organization: string
   /**chatgpt option */
   chatGPTOption: IChatGPTOption
+  /**chatgpt option */
+  chatGPTSystem: string
   /**use google api */
   googleApiEnable: boolean
   /**google api option */

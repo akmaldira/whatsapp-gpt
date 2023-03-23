@@ -49,7 +49,8 @@ export default class extends BaseCommand {
     const openai = new OpenAI(
       this.client.config.openAIAPIKey,
       this.client.config.organization,
-      this.client.config.chatGPTOption
+      this.client.config.chatGPTOption,
+      this.client.config.chatGPTSystem
     )
 
     const response = await openai.ask(M.from, question)

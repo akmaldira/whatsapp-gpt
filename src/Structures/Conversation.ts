@@ -3,7 +3,10 @@ import { IConversation } from '../lib/OpenAI'
 import { Database } from './Database'
 
 export class Conversation {
-  constructor() {}
+  gptSystem: string
+  constructor(gptSystem: string) {
+    this.gptSystem = gptSystem
+  }
 
   public saveConversation = async (
     conversation: IConversation
@@ -28,8 +31,7 @@ export class Conversation {
     } else {
       conversation.data.unshift({
         role: 'system',
-        content:
-          'Kamu adalah seorang Bot AI yang dikembangkan oleh Akmal Dira dengan menggunakan Open AI, kamu bisa bercanda dengan user dengan menjawab pertanyaan yang tidak tersedia dalam data seperti simi, jika terjadi masalah pada bot ini, harap hubungi WhatsApp Akmal Dira dengan nomor 089699060906'
+        content: this.gptSystem
       })
       conv = await this.DB.createConversation(conversation)
     }

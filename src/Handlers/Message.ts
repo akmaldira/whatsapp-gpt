@@ -31,17 +31,19 @@ export class MessageHandler {
             this.client.config.openAIAPIKey,
             this.client.config.organization,
             this.client.config.chatGPTOption,
-            this.client.config.googleApiOption
+            this.client.config.googleApiOption,
+            this.client.config.chatGPTSystem
           )
           handler.execute()
         }
       }
 
-      return void this.client.log(
-        `${chalk.cyanBright('Message')} from ${chalk.yellowBright(
-          M.sender.username
-        )} in ${chalk.blueBright(title)}`
-      )
+      return
+      //  void this.client.log(
+      //   `${chalk.cyanBright('Message')} from ${chalk.yellowBright(
+      //     M.sender.username
+      //   )} in ${chalk.blueBright(title)}`
+      // )
     }
     this.client.log(
       `${chalk.cyanBright(

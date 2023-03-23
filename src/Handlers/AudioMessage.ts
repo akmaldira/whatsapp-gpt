@@ -18,19 +18,23 @@ export default class AudioMessage {
 
   private googleApiOption: IGoogleOption
 
+  private chatGPTSystem: string
+
   constructor(
     M: Message,
     openAIAPIKey: string,
     organization: string,
     chatGPTOption: IChatGPTOption,
-    googleApiOption: IGoogleOption
+    googleApiOption: IGoogleOption,
+    chatGPTSystem: string
   ) {
     this.M = M
     this.audio = M.message.message.audioMessage || null
     this.openAIAPIKey = openAIAPIKey
     this.organization = organization
-    ;(this.chatGPTOption = chatGPTOption),
-      (this.googleApiOption = googleApiOption)
+    this.chatGPTOption = chatGPTOption
+    this.googleApiOption = googleApiOption
+    this.chatGPTSystem = chatGPTSystem
   }
 
   public execute = async () => {
@@ -69,7 +73,8 @@ export default class AudioMessage {
     const openai = new OpenAI(
       this.openAIAPIKey,
       this.organization,
-      this.chatGPTOption
+      this.chatGPTOption,
+      this.chatGPTSystem
     )
     const answer = await openai.ask(this.M.from, question)
 
