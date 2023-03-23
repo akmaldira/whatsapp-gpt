@@ -96,8 +96,8 @@ export class Server {
       res.sendStatus(404)
     )
 
-    this.app.listen(5000, () =>
-      console.log(`Server started on PORT : ${5000}`)
+    this.app.listen(process.env.PORT, () =>
+      console.log(`Server started on PORT : ${process.env.PORT}`)
     )
   }
 
