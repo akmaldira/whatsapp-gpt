@@ -55,13 +55,15 @@ export class Server {
     })
 
     this.app.get('/wa/register', async (req, res) => {
-      const { session, password } = req.query
+      const { session, password, gptSystem, aboutText } = req.query
       try {
         if (password !== process.env.APP_PASSWORD)
           throw new Error('Incorrect password')
 
         const createSession = await this.database.session.create({
-          sessionId: session
+          sessionId: session,
+          gptSystem,
+          aboutText
         })
 
         await this.execute(createSession)
