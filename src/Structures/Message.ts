@@ -63,7 +63,9 @@ export class Message {
         : ''
     }
     this.content = getContent()
+
     this.urls = this.client.utils.extractUrls(this.content)
+
     const mentions = (
       M.message?.[this.type as 'extendedTextMessage']?.contextInfo
         ?.mentionedJid || []
@@ -194,6 +196,7 @@ export class Message {
     options: {
       sections?: proto.Message.ListMessage.ISection[]
       buttonText?: string
+      templateButtons?: proto.IHydratedTemplateButton[]
       title?: string
     } = {}
   ): Promise<ReturnType<typeof this.client.sendMessage>> => {
@@ -225,6 +228,7 @@ export class Message {
         sections: options.sections,
         title: options.title,
         buttonText: options.buttonText,
+        templateButtons: options.templateButtons,
         ptt: type !== 'audio' ? null : true
       } as unknown as AnyMessageContent,
       {

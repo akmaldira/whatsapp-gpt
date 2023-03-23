@@ -84,6 +84,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
       msgRetryCounterMap: {},
       markOnlineOnConnect: false
     })
+
     for (const method of Object.keys(this.client))
       this[method as keyof Client] =
         this.client[method as keyof client]
@@ -135,7 +136,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
       }
       return void this.emit('new_message', await M.simplify())
     })
-    this.ev.on('connection.update', (update) => {
+    this.ev.on('connection.update', async (update) => {
       if (update.qr) {
         this.log(`QR code generated. Scan it to continue`)
         this.QR = qr.imageSync(update.qr)
@@ -162,11 +163,15 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         this.log('Connecting to WhatsApp...')
       }
       if (connection === 'open') {
+        await this.client.updateProfileStatus(
+          this.config.isDevelopment ? 'maintenance' : 'call = block'
+        )
         this.condition = 'connected'
         this.log('Connected to WhatsApp')
       }
     })
     this.ev.on('creds.update', saveState)
+
     return this.client
   }
 
@@ -196,7 +201,6 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
   public QR!: Buffer
 
   public condition!: 'connected' | 'connecting' | 'logged_out'
-
   public end!: client['end']
   public ev!: client['ev']
   public fetchBlocklist!: client['fetchBlocklist']

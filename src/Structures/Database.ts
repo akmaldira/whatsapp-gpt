@@ -2,12 +2,10 @@ import { Contact } from '@adiwajshing/baileys'
 import {
   contactSchema,
   disabledCommandsSchema,
-  featureSchema,
   groupSchema,
   GroupSchema,
   sessionSchema,
   TCommandModel,
-  TFeatureModel,
   TGroupModel,
   TSessionModel,
   TUserModel,
@@ -114,25 +112,6 @@ export class Database {
     )
   }
 
-  public getFeature = async (
-    feature: string
-  ): Promise<TFeatureModel> =>
-    (await this.feature.findOne({ feature })) ||
-    (await new this.feature({
-      feature
-    }).save())
-
-  public updateFeature = async (
-    feature: string,
-    update: boolean
-  ): Promise<void> => {
-    await this.getFeature(feature)
-    await this.feature.updateOne(
-      { feature: feature },
-      { $set: { state: update } }
-    )
-  }
-
   public createConversation = async (
     conversation: IConversation
   ): Promise<TConversationModel> => {
@@ -159,8 +138,6 @@ export class Database {
   public session = sessionSchema
 
   public disabledCommands = disabledCommandsSchema
-
-  public feature = featureSchema
 
   public conversation = conversationSchema
 }

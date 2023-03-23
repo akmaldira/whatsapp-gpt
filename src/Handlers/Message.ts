@@ -1,4 +1,3 @@
-import axios from 'axios'
 import chalk from 'chalk'
 import { readdirSync } from 'fs-extra'
 import { join } from 'path'
@@ -14,36 +13,6 @@ export class MessageHandler {
     const args = M.content.split(' ')
     const title =
       M.chat === 'group' ? M.groupMetadata?.subject || 'Group' : 'DM'
-    const text = M.content
-    if (
-      M.chat === 'dm' &&
-      (await this.client.DB.getFeature('chatbot')).state
-    ) {
-      if (M.message.key.fromMe) return void null
-      if (this.client.config.chatBotUrl) {
-        const myUrl = this.client.config.chatBotUrl
-        let get = new URL(myUrl)
-        let params = get.searchParams
-        await axios
-          .get(
-            `${encodeURI(
-              `http://api.brainshop.ai/get?bid=${params.get(
-                'bid'
-              )}&key=${params.get('key')}&uid=${
-                M.sender.jid
-              }&msg=${text}`
-            )}`
-          )
-          .then((res) => {
-            if (res.status !== 200)
-              return void M.reply(`Error: ${res.status}`)
-            return void M.reply(res.data.cnt)
-          })
-          .catch(() => {
-            M.reply(`Well....`)
-          })
-      }
-    }
     await this.moderate(M)
     if (!args[0] || !args[0].startsWith(prefix)) {
       if (
