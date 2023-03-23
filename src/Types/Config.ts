@@ -31,4 +31,6 @@ export interface IConfig {
   googleApiEnable: boolean
   /**google api option */
   googleApiOption: IGoogleOption
+  /**about bot */
+  aboutBot: string
 }

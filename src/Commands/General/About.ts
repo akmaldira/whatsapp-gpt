@@ -24,6 +24,11 @@ export default class extends BaseCommand {
 
     text += '\nhttps://chat.whatsapp.com/DamD6Evs5vS5z32vxUkE3p'
 
-    return void (await M.reply(text))
+    const responseText =
+      this.client.config.aboutBot !== null
+        ? this.client.config.aboutBot
+        : text
+
+    return void (await M.reply(responseText))
   }
 }
