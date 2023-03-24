@@ -53,6 +53,12 @@ yarn build
 yarn run pm2:start
 ```
 
+### Session
+
+- To add new session, you should open http://localhost:PORT/new.html and fill form
+- To barcode login session, you can login at http://localhost:PORT and fill sessionID
+
+
 ### Contribution
 
 - Feel free to open issues regarding any problems or if you have any feature requests
