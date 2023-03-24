@@ -2,7 +2,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('unban', {
   description: 'Unban pengguna',
-  category: 'dev',
+  category: 'moderation',
   cooldown: 5,
   usage: 'unban [tag/quote users]'
 })
@@ -11,8 +11,9 @@ export default class extends BaseCommand {
     const users = M.mentioned
     if (M.quoted && !users.includes(M.quoted.sender.jid))
       users.push(M.quoted.sender.jid)
-    if (users.length < 1)
+    if (users.length < 1) {
       return void M.reply('Tag atau reply user yang akan di unban')
+    }
     let text = 'Status unban\n\n'
     for (const user of users) {
       const info = await this.client.DB.getUser(user)

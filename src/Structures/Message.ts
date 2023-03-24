@@ -207,7 +207,11 @@ export class Message {
       {
         [type]:
           type !== 'audio'
-            ? content
+            ? type === 'image' && typeof content === 'string'
+              ? {
+                  url: content
+                }
+              : content
             : {
                 url: content
               },

@@ -1,6 +1,7 @@
 import {
   ChatCompletionRequestMessage,
   Configuration,
+  CreateImageRequestSizeEnum,
   OpenAIApi
 } from 'openai'
 import { Conversation } from '../Structures/Conversation'
@@ -89,6 +90,23 @@ export class OpenAI extends OpenAIApi {
         id: conversation.id,
         data: updateData
       })
+    }
+  }
+
+  public async generateImg(
+    prompt: string,
+    n: number = 1,
+    size: CreateImageRequestSizeEnum = '1024x1024'
+  ): Promise<string | string[]> {
+    try {
+      const imgUrl = await this.createImage({
+        prompt,
+        n,
+        size
+      })
+      return imgUrl.data.data.map((url) => url.url)
+    } catch (error) {
+      return 'Error saat generate gambar\n\n*Reason*' + error.message
     }
   }
 

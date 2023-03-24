@@ -4,6 +4,7 @@ import { join } from 'path'
 import { BaseCommand, Client, Message } from '../Structures'
 import { IArgs, ICommand } from '../Types'
 import AudioMessage from './AudioMessage'
+import FindBadword from './FIndBadword'
 
 export class MessageHandler {
   constructor(private client: Client) {}
@@ -36,6 +37,13 @@ export class MessageHandler {
           )
           handler.execute()
         }
+      } else if (
+        (!M.sender.isMod &&
+          M.message.message?.extendedTextMessage?.text) ||
+        M.message.message?.conversation
+      ) {
+        const handler = new FindBadword(this.client.DB)
+        handler.execute(M)
       }
 
       return
