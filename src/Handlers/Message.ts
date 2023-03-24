@@ -38,9 +38,9 @@ export class MessageHandler {
           handler.execute()
         }
       } else if (
-        (!M.sender.isMod &&
-          M.message.message?.extendedTextMessage?.text) ||
-        M.message.message?.conversation
+        !M.sender.isMod &&
+        (M.message.message?.extendedTextMessage?.text ||
+          M.message.message?.conversation)
       ) {
         const handler = new FindBadword(this.client.DB)
         handler.execute(M)
