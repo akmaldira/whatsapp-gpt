@@ -13,7 +13,21 @@ export default class extends BaseCommand {
       users.push(M.quoted.sender.jid)
     if (users.length < 1)
       return void M.reply('Tag atau reply user yang akan dikick')
-    await this.client.groupParticipantsUpdate(M.from, users, 'remove')
-    return void (await M.reply('Berhasil'))
+
+    const bot = this.client.correctJid(this.client.user?.id || '')
+    const isAdmin = M.groupMetadata?.admins?.includes(bot)
+
+    if (isAdmin) {
+      await this.client.groupParticipantsUpdate(
+        M.from,
+        users,
+        'remove'
+      )
+
+      return void (await M.reply('Berhasil'))
+    }
+    return void M.reply(
+      'Saya tidak memiliki akses untuk mengeluarkan orang, tolong jadikan saya admin'
+    )
   }
 }
