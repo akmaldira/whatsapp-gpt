@@ -14,7 +14,7 @@ export default class FindBadword {
   }
 
   public execute = async (M: Message): Promise<void> => {
-    const user = await this.database.getUser(M.sender.jid)
+    const user = await this.database.findUser(M.sender.jid)
 
     if (user) {
       let badwordUser = user.badwordCount
@@ -40,9 +40,11 @@ export default class FindBadword {
 
         if (badwordUser === this.maxBadWord) {
           await this.database.updateBanStatus(M.sender.jid, 'ban')
-          return void M.reply(
+          await M.reply(
             'Anda telah terbanned karena telah mengirim kata kasar 3x\n\njika ingin diunban, harap meminta maaf kepada tuhan dan kontak wa.me/+6289699060906 untuk di unban'
           )
+
+          return
         } else {
           return void M.reply(
             `Pesan anda mengandung kata kasar, jika ${

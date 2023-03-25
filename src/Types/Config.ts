@@ -33,4 +33,6 @@ export interface IConfig {
   googleApiOption: IGoogleOption
   /**about bot */
   aboutBot: string
+  /**remove bg key */
+  removeBgKey: string
 }

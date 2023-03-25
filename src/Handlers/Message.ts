@@ -124,7 +124,10 @@ export class MessageHandler {
       return void M.reply('Perintah ini tidak diizinkan di grup ini')
     const cooldownAmount = (command.config.cooldown ?? 3) * 1000
     const time = cooldownAmount + Date.now()
-    if (this.cooldowns.has(`${M.sender.jid}${command.name}`)) {
+    if (
+      !M.sender.isMod &&
+      this.cooldowns.has(`${M.sender.jid}${command.name}`)
+    ) {
       const cd = this.cooldowns.get(`${M.sender.jid}${command.name}`)
       const remainingTime = this.client.utils.convertMs(
         (cd as number) - Date.now()

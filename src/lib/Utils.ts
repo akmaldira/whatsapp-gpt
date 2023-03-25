@@ -3,10 +3,13 @@ import { load } from 'cheerio'
 import { exec } from 'child_process'
 import regex from 'emoji-regex'
 import FormData from 'form-data'
+import fs from 'fs'
 import { readFile, unlink, writeFile } from 'fs-extra'
-import { tmpdir } from 'os'
+import os, { tmpdir } from 'os'
+import path from 'path'
 import { promisify } from 'util'
-
+import { v4 } from 'uuid'
+import { Color } from '../Types'
 export class Utils {
   public generateRandomHex = (): string =>
     `#${(~~(Math.random() * (1 << 24))).toString(16)}`
@@ -41,6 +44,47 @@ export class Utils {
     const urls = content.match(regex)
 
     return urls ? urls : []
+  }
+
+  public removeBg = async (
+    key: string,
+    image: Buffer,
+    bgColor?: keyof typeof Color | null
+  ): Promise<Buffer | string> => {
+    const tempdir = os.tmpdir()
+    const filePath = path.join(tempdir, v4() + '.jpg')
+
+    await writeFile(filePath, image)
+
+    try {
+      const formData = new FormData()
+      formData.append('size', 'auto')
+      formData.append(
+        'image_file',
+        fs.createReadStream(filePath),
+        path.basename(filePath)
+      )
+      if (bgColor) formData.append('bg_color', bgColor)
+
+      const removeBg = await axios({
+        method: 'post',
+        url: 'https://api.remove.bg/v1.0/removebg',
+        data: formData,
+        responseType: 'arraybuffer',
+        headers: {
+          ...formData.getHeaders(),
+          'X-Api-Key': key
+        }
+      })
+      if (removeBg.status != 200)
+        return `Error ${removeBg.status}\n\n*Reason* ${removeBg.statusText}`
+      fs.writeFileSync('no-bg.png', removeBg.data)
+      return removeBg.data
+    } catch (error) {
+      return `Terjadi kesalahan\n\n*Reason* ${error.message}`
+    } finally {
+      await unlink(filePath).catch((err) => console.log(err.message))
+    }
   }
 
   public extractEmojis = (content: string): string[] =>

@@ -65,3 +65,17 @@ export interface IGroup extends GroupMetadata {
 }
 
 export type client = ReturnType<typeof Baileys>
+
+export enum Color {
+  'red',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+  'brown',
+  'black',
+  'gray',
+  'white'
+}

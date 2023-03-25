@@ -60,7 +60,8 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
             process.env.GOOGLE_VOICE_SSML_GENDER
           ] || google.cloud.texttospeech.v1.SsmlVoiceGender['FEMALE']
       },
-      aboutBot: session.aboutText || null
+      aboutBot: session.aboutText || null,
+      removeBgKey: process.env.REMOVE_BG_KEY || ''
     }
   }
 

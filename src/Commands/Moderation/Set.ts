@@ -12,29 +12,31 @@ import { GroupFeatures, IArgs } from '../../Types'
 export default class extends BaseCommand {
   public override execute = async (
     M: Message,
-    { flags }: IArgs
+    { context }: IArgs
   ): Promise<void> => {
     const features = Object.keys(
       GroupFeatures
     ) as (keyof typeof GroupFeatures)[]
-    if (!flags.length) {
+
+    if (!context) {
       let text = '🍁 *Fitur yang tersedia*'
       for (const feature of features) {
         text += `\n\n*Fitur:* ${feature} \n*Deskripsi:* ${GroupFeatures[feature]}`
       }
       return void M.reply(text)
     } else {
-      const options = flags[0].trim().toLowerCase().split('=')
-      const feature = options[0]
-        .toLowerCase()
-        .replace('--', '') as keyof typeof GroupFeatures
+      const feature =
+        (context
+          .split('=')[0]
+          .toLowerCase() as keyof typeof GroupFeatures) ||
+        ('unknown' as keyof typeof GroupFeatures)
+      const action = context.split('=')[1] || 'unknown'
       const actions = ['enable', 'disable']
 
       if (!features.includes(feature))
         return void M.reply(
           `Fitur tidak tersedia, untuk melihat fitur yang tersedia, ketik !set, contoh penggunaan !set voicegpt=enable`
         )
-      const action = options[1]
       if (!action || !actions.includes(action))
         return void M.reply(
           `${
@@ -45,7 +47,7 @@ export default class extends BaseCommand {
               : `Masukkan opsi yang akan dipilih.`
           } Contoh: *${
             this.client.config.prefix
-          }set --${feature}=enable*`
+          }set ${feature}=enable*`
         )
       const data = await this.client.DB.getGroup(M.from)
       if (
