@@ -42,6 +42,7 @@ export class MessageHandler {
 
       if (
         badword &&
+        !M.message.key.fromMe &&
         !M.sender.isMod &&
         !M.sender.isAdmin &&
         (M.message.message?.extendedTextMessage?.text ||

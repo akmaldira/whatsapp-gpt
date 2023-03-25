@@ -2,7 +2,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 import { GroupFeatures, IArgs } from '../../Types'
 
 @Command('set', {
-  description: 'Enables/Disables a certain group feature',
+  description: 'Aktifkan dan mematikan fitur grup',
   usage:
     'set --[feature]=[option]\nsee all feature !set\nexample : !set --badword=enable',
   cooldown: 5,
