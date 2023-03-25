@@ -1,4 +1,3 @@
-import { proto } from '@adiwajshing/baileys'
 import { BaseCommand, Command, Message } from '../../Structures'
 import { GroupFeatures, IArgs } from '../../Types'
 
@@ -18,88 +17,55 @@ export default class extends BaseCommand {
       GroupFeatures
     ) as (keyof typeof GroupFeatures)[]
     if (!flags.length) {
-      const sections: proto.Message.ListMessage.ISection[] = []
       let text = '🍁 *Fitur yang tersedia*'
       for (const feature of features) {
-        const rows: proto.Message.ListMessage.IRow[] = []
-        rows.push(
-          {
-            title: `Enable ${this.client.utils.capitalize(feature)}`,
-            rowId: `${this.client.config.prefix}set --${feature}=true`
-          },
-          {
-            title: `Disable ${this.client.utils.capitalize(feature)}`,
-            rowId: `${this.client.config.prefix}set --${feature}=false`
-          }
-        )
-        sections.push({
-          title: this.client.utils.capitalize(feature),
-          rows
-        })
-        text += `\n\n*Fitur:* ${this.client.utils.capitalize(
-          feature
-        )} \n*Deskripsi:* ${GroupFeatures[feature]}`
+        text += `\n\n*Fitur:* ${feature} \n*Deskripsi:* ${GroupFeatures[feature]}`
       }
-      return void M.reply(
-        text,
-        'text',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        {
-          sections,
-          buttonText: 'Fitur grup'
-        }
-      )
+      return void M.reply(text)
     } else {
       const options = flags[0].trim().toLowerCase().split('=')
-      const feature = options[0].replace(
-        '--',
-        ''
-      ) as keyof typeof GroupFeatures
-      const actions = ['true', 'false']
+      const feature = options[0]
+        .toLowerCase()
+        .replace('--', '') as keyof typeof GroupFeatures
+      const actions = ['enable', 'disable']
 
       if (!features.includes(feature))
         return void M.reply(
-          `Invalid feature. Use *${this.client.config.prefix}set* to see all of the available features`
+          `Fitur tidak tersedia, untuk melihat fitur yang tersedia, ketik !set, contoh penggunaan !set voicegpt=enable`
         )
       const action = options[1]
       if (!action || !actions.includes(action))
         return void M.reply(
           `${
             action
-              ? `Invalid option. It should be one of them: *${actions
+              ? `Opsi yang dipilih harus salah satu dari: *${actions
                   .map(this.client.utils.capitalize)
                   .join(', ')}*.`
-              : `Provide the option to be set of this feature.`
-          } Example: *${
+              : `Masukkan opsi yang akan dipilih.`
+          } Contoh: *${
             this.client.config.prefix
-          }set --${feature}=true*`
+          }set --${feature}=enable*`
         )
       const data = await this.client.DB.getGroup(M.from)
       if (
-        (action === 'true' && data[feature]) ||
-        (action === 'false' && !data[feature])
+        (action === 'enable' && data[feature]) ||
+        (action === 'disable' && !data[feature])
       )
         return void M.reply(
-          `🟨 *${this.client.utils.capitalize(feature)} is already ${
-            action === 'true' ? 'Enabled' : 'Disabled'
+          `🟨 *${this.client.utils.capitalize(feature)} sudah ${
+            action === 'enable' ? 'Enabled' : 'Disabled'
           }*`
         )
       await this.client.DB.updateGroup(
         M.from,
         feature,
-        action === 'true'
+        action === 'enable'
       )
       return void M.reply(
         `${
-          action === 'true' ? '🟩' : '🟥'
-        } *${this.client.utils.capitalize(feature)} is now ${
-          action === 'true' ? 'Enabled' : 'Disabled'
+          action === 'enable' ? '🟩' : '🟥'
+        } *${this.client.utils.capitalize(feature)} sekarang sudah ${
+          action === 'enable' ? 'Enabled' : 'Disabled'
         }*`
       )
     }

@@ -16,16 +16,17 @@ export class MessageHandler {
       M.chat === 'group' ? M.groupMetadata?.subject || 'Group' : 'DM'
     await this.moderate(M)
     if (!args[0] || !args[0].startsWith(prefix)) {
+      const { voicegpt, badword } = await this.client.DB.getGroup(
+        M.from
+      )
+
       if (
         !M.message.key.fromMe &&
         M.message.message?.audioMessage &&
         this.client.config.googleApiEnable
       ) {
         let voiceGropuEnable = false
-        if (M.chat === 'group') {
-          const { voicegpt } = await this.client.DB.getGroup(M.from)
-          voiceGropuEnable = voicegpt
-        }
+        if (M.chat === 'group') voiceGropuEnable = voicegpt
         if (M.chat === 'dm' || voiceGropuEnable) {
           const handler = new AudioMessage(
             M,
@@ -37,8 +38,12 @@ export class MessageHandler {
           )
           handler.execute()
         }
-      } else if (
+      }
+
+      if (
+        badword &&
         !M.sender.isMod &&
+        !M.sender.isAdmin &&
         (M.message.message?.extendedTextMessage?.text ||
           M.message.message?.conversation)
       ) {

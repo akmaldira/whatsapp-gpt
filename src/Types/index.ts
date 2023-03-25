@@ -56,7 +56,8 @@ export interface YT_Search {
 
 export enum GroupFeatures {
   'events' = 'Jika diaktifkan, bot akan memberi ucapan selamat datang jika ada member baru yang masuk',
-  'voicegpt' = 'Jika diaktifkan, voice note dari member akan dibalas oleh ChatGPT'
+  'voicegpt' = 'Jika diaktifkan, voice note dari member akan dibalas oleh ChatGPT',
+  'badword' = 'Jika diaktifkan, semua chat didalam grup ini akan difilter, jika terdapat pesan yang mengandung kata kasar, orang yang mengirimnya akan dibanned'
 }
 
 export interface IGroup extends GroupMetadata {

@@ -12,6 +12,8 @@ export class CallHandler {
     this.client.log(
       `${chalk.cyanBright('Call')} from ${chalk.blueBright(username)}`
     )
+    if (this.client.config.isDevelopment) return
+
     await this.client.sendMessage(caller, {
       text: 'Kamu telah dibanned'
     })

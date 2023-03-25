@@ -16,6 +16,9 @@ export class GroupSchema {
 
   @prop({ type: Boolean, required: true, default: false })
   public voicegpt!: boolean
+
+  @prop({ type: Boolean, required: true, default: false })
+  public badword!: boolean
 }
 
 export type TGroupModel = GroupSchema & Document

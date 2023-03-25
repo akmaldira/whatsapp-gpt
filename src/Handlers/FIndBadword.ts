@@ -41,7 +41,7 @@ export default class FindBadword {
         if (badwordUser === this.maxBadWord) {
           await this.database.updateBanStatus(M.sender.jid, 'ban')
           return void M.reply(
-            'Anda telah terbanned karena telah mengirim kata kasar 3x\n\njika ingin diunban, harap meminta maaf kepada tuhan dan minta admin grup untuk di unban atau kontak wa.me/+6289699060906 untuk di unban'
+            'Anda telah terbanned karena telah mengirim kata kasar 3x\n\njika ingin diunban, harap meminta maaf kepada tuhan dan kontak wa.me/+6289699060906 untuk di unban'
           )
         } else {
           return void M.reply(
