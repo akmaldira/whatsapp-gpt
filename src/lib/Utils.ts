@@ -78,7 +78,6 @@ export class Utils {
       })
       if (removeBg.status != 200)
         return `Error ${removeBg.status}\n\n*Reason* ${removeBg.statusText}`
-      fs.writeFileSync('no-bg.png', removeBg.data)
       return removeBg.data
     } catch (error) {
       return `Terjadi kesalahan\n\n*Reason* ${error.message}`
