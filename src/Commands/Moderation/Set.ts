@@ -3,7 +3,8 @@ import { GroupFeatures, IArgs } from '../../Types'
 
 @Command('set', {
   description: 'Enables/Disables a certain group feature',
-  usage: 'set',
+  usage:
+    'set --[feature]=[option]\nsee all feature !set\nexample : !set --badword=enable',
   cooldown: 5,
   category: 'moderation',
   aliases: ['feature']
