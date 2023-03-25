@@ -2,7 +2,7 @@ import { BaseCommand, Command, Message } from '../../Structures'
 
 @Command('unban', {
   description: 'Unban pengguna',
-  category: 'moderation',
+  category: 'dev',
   cooldown: 5,
   usage: 'unban [tag/quote users]'
 })
