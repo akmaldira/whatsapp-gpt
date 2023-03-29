@@ -21,74 +21,74 @@ export class MessageHandler {
         this.client.config.session
       )
 
-      if (!filterUser) return
+      if (filterUser) {
+        if (
+          owners.includes(M.from.split('@')[0]) &&
+          args[0] === '!addwl'
+        ) {
+          if (!args[1])
+            return void M.reply(
+              'Masukkan nomor yang ingin didaftarkan\n\nHarus menggunakan kode negara\nExample: 62896xxxxxx'
+            )
 
-      if (
-        owners.includes(M.from.split('@')[0]) &&
-        args[0] === '!addwl'
-      ) {
-        if (!args[1])
-          return void M.reply(
-            'Masukkan nomor yang ingin didaftarkan\n\nHarus menggunakan kode negara\nExample: 62896xxxxxx'
+          const whitelist = await this.client.DB.getWhitelist(
+            this.client.config.session
           )
 
+          if (whitelist.includes(args[1]))
+            return void M.reply('Nomor telah terdaftar')
+
+          const updateWl = await this.client.DB.addWhitelist(
+            this.client.config.session,
+            args[1]
+          )
+
+          let text = `Berhasil menambah ${args[1]}\n\nList whitelist anda\n\n`
+
+          updateWl.map((wl, i) => (text += `${i + 1}. ${wl}\n`))
+
+          return void M.reply(text)
+        } else if (
+          owners.includes(M.from.split('@')[0]) &&
+          args[0] === '!listwl'
+        ) {
+          const whitelist = await this.client.DB.getWhitelist(
+            this.client.config.session
+          )
+
+          let text = 'List whitelist\n\n'
+
+          whitelist.map((wl, i) => (text += `${i + 1}. ${wl}\n`))
+
+          return void M.reply(text)
+        } else if (
+          owners.includes(M.from.split('@')[0]) &&
+          args[0] === '!deletewl'
+        ) {
+          if (!args[1])
+            return void M.reply('Masukkan nomor yang akan dihapus')
+
+          const whitelist = await this.client.DB.getWhitelist(
+            this.client.config.session
+          )
+
+          if (!whitelist.includes(args[1]))
+            return void M.reply('Nomor sebelumnya tidak terdaftar')
+          await this.client.DB.deleteWhitelist(
+            this.client.config.session,
+            args[1]
+          )
+
+          return void M.reply(`Berhasil menghapus ${args[1]}`)
+        }
+
         const whitelist = await this.client.DB.getWhitelist(
           this.client.config.session
         )
 
-        if (whitelist.includes(args[1]))
-          return void M.reply('Nomor telah terdaftar')
-
-        const updateWl = await this.client.DB.addWhitelist(
-          this.client.config.session,
-          args[1]
-        )
-
-        let text = `Berhasil menambah ${args[1]}\n\nList whitelist anda\n\n`
-
-        updateWl.map((wl, i) => (text += `${i + 1}. ${wl}\n`))
-
-        return void M.reply(text)
-      } else if (
-        owners.includes(M.from.split('@')[0]) &&
-        args[0] === '!listwl'
-      ) {
-        const whitelist = await this.client.DB.getWhitelist(
-          this.client.config.session
-        )
-
-        let text = 'List whitelist\n\n'
-
-        whitelist.map((wl, i) => (text += `${i + 1}. ${wl}\n`))
-
-        return void M.reply(text)
-      } else if (
-        owners.includes(M.from.split('@')[0]) &&
-        args[0] === '!deletewl'
-      ) {
-        if (!args[1])
-          return void M.reply('Masukkan nomor yang akan dihapus')
-
-        const whitelist = await this.client.DB.getWhitelist(
-          this.client.config.session
-        )
-
-        if (!whitelist.includes(args[1]))
-          return void M.reply('Nomor sebelumnya tidak terdaftar')
-        await this.client.DB.deleteWhitelist(
-          this.client.config.session,
-          args[1]
-        )
-
-        return void M.reply(`Berhasil menghapus ${args[1]}`)
+        if (!whitelist.includes(M.from.split('@')[0]))
+          return void M.reply('Hai, kamu mau ngapain?')
       }
-
-      const whitelist = await this.client.DB.getWhitelist(
-        this.client.config.session
-      )
-
-      if (!whitelist.includes(M.from.split('@')[0]))
-        return void M.reply('Hai, kamu mau ngapain?')
     }
 
     if (!args[0] || !args[0].startsWith(prefix)) {
