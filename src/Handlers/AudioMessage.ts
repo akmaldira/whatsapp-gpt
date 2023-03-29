@@ -40,7 +40,7 @@ export default class AudioMessage {
   public execute = async () => {
     if (!this.audio) return
     if (this.audio.seconds > 10) {
-      this.M.reply(
+      return void this.M.reply(
         'Batas maksimum penggunaan Speech to Text adalah 10 detik'
       )
     }

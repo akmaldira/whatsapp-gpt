@@ -13,6 +13,12 @@ export class SessionsSchema {
 
   @prop({ type: String })
   public gptSystem?: string
+
+  @prop({ type: Boolean, required: true, default: false })
+  public filterUser!: boolean
+
+  @prop({ type: () => String, required: true, default: [] })
+  public owners!: string[]
 }
 
 export type TSessionModel = SessionsSchema & Document

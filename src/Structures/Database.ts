@@ -10,7 +10,8 @@ import {
   TSessionModel,
   TUserModel,
   userSchema,
-  UserSchema
+  UserSchema,
+  whitelistSchema
 } from '../Database'
 import {
   conversationSchema,
@@ -133,6 +134,44 @@ export class Database {
   public resetConversation = async (): Promise<void> => {
     await this.conversation.deleteMany()
   }
+
+  public getWhitelist = async (
+    session: string
+  ): Promise<string[]> => {
+    let result = await this.whitelist.findOne({ session })
+    if (!result) result = await new this.whitelist({ session }).save()
+    return result.data
+  }
+
+  public addWhitelist = async (
+    session: string,
+    whitelist: string
+  ): Promise<string[]> => {
+    await this.whitelist.updateOne(
+      { session },
+      {
+        $push: {
+          data: whitelist
+        }
+      }
+    )
+    return await this.getWhitelist(session)
+  }
+
+  public deleteWhitelist = async (
+    session: string,
+    whitelist: string
+  ): Promise<void> => {
+    await this.whitelist.updateOne(
+      { session },
+      {
+        $pull: {
+          data: whitelist
+        }
+      }
+    )
+  }
+
   private utils = new Utils()
 
   public user = userSchema
@@ -146,6 +185,8 @@ export class Database {
   public disabledCommands = disabledCommandsSchema
 
   public conversation = conversationSchema
+
+  public whitelist = whitelistSchema
 }
 
 type valueof<T> = T[keyof T]
