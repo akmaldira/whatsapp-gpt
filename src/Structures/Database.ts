@@ -89,10 +89,9 @@ export class Database {
     await this.session.deleteOne({ sessionId })
   }
 
-  public getContacts = async (): Promise<Contact[]> => {
-    let result = await this.contact.findOne({ ID: 'contacts' })
-    if (!result)
-      result = await new this.contact({ ID: 'contacts' }).save()
+  public getContacts = async (ID: string): Promise<Contact[]> => {
+    let result = await this.contact.findOne({ ID })
+    if (!result) result = await new this.contact({ ID }).save()
     return result.data
   }
 
