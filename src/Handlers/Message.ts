@@ -22,8 +22,9 @@ export class MessageHandler {
       )
 
       if (filterUser) {
+        let sender = M.chat === 'dm' ? M.from : M.sender.jid
         if (
-          owners.includes(M.from.split('@')[0]) &&
+          owners.includes(sender.split('@')[0]) &&
           args[0] === '!addwl'
         ) {
           if (!args[1])
@@ -49,7 +50,7 @@ export class MessageHandler {
 
           return void M.reply(text)
         } else if (
-          owners.includes(M.from.split('@')[0]) &&
+          owners.includes(sender.split('@')[0]) &&
           args[0] === '!listwl'
         ) {
           const whitelist = await this.client.DB.getWhitelist(
@@ -62,7 +63,7 @@ export class MessageHandler {
 
           return void M.reply(text)
         } else if (
-          owners.includes(M.from.split('@')[0]) &&
+          owners.includes(sender.split('@')[0]) &&
           args[0] === '!deletewl'
         ) {
           if (!args[1])
@@ -86,7 +87,7 @@ export class MessageHandler {
           this.client.config.session
         )
 
-        if (!whitelist.includes(M.from.split('@')[0]))
+        if (!whitelist.includes(sender.split('@')[0]))
           return void M.reply('Hai, kamu mau ngapain?')
       }
     }
