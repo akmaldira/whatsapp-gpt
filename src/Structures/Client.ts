@@ -39,7 +39,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
         .map((user) => `${user}@s.whatsapp.net`),
       isDevelopment:
         process.env.NODE_ENV === 'development' ? true : false,
-      openAIAPIKey: process.env.OPENAI_KEY || '',
+      openAIAPIKey: session.openai ? session.openai : process.env.OPENAI_KEY || "",
       organization: process.env.ORGANIZATION || '',
       chatGPTOption: {
         temperature: 0.7,
