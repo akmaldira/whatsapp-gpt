@@ -40,7 +40,7 @@ export class Client extends (EventEmitter as new () => TypedEventEmitter<Events>
       isDevelopment:
         process.env.NODE_ENV === 'development' ? true : false,
       openAIAPIKey: session.openai ? session.openai : process.env.OPENAI_KEY || "",
-      organization: process.env.ORGANIZATION || '',
+      organization: session.openaiOrganization ? session.openaiOrganization : process.env.ORGANIZATION || '',
       chatGPTOption: {
         temperature: 0.7,
         max_tokens: 1000,

@@ -22,6 +22,9 @@ export class SessionsSchema {
 
   @prop({ type: String, required: true, default: '' })
   public openai!: string
+
+  @prop({ type: String, required: true, default: '' })
+  public openaiOrganization!: string
 }
 
 export type TSessionModel = SessionsSchema & Document
